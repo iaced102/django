@@ -1,0 +1,51 @@
+{% extends 'base/base.html'%}
+
+{% block body %}
+    <section class='section'>
+        <div class='create-container'>
+            <div class='sub-create-container'>
+                <h1>Create new item</h1>
+                <div class='create-inside-input'>
+                    <i class='bx bx-sitemap'></i>
+                    <input type="text" placeholder="type name" id='createNewItem'>
+                </div>
+                <div>
+                    <select class='choice-category' id='category'>
+                        {% for c in category %}
+                            <option value='{{c.id}}'>{{c.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button onclick='create()' style='margin: 30px 0 0 15px;' type="button" class="btn btn-light">Create</button>
+            </div>
+        </div>
+        <div id='status'></div>
+    </section>
+    
+{% endblock %}
+
+{% block script %}
+    <script>
+        function create()
+            {
+                console.log($("#category").val())
+                $.ajax({
+                    url: '{%url "create_item" %}',
+                    method: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken':'{{ csrf_token }}',
+                        'name': $('#createNewItem').val(),
+                        'category': $("#category").val()
+                    },
+
+                    success: function(){
+                        $("#status").text("create "+$('#createNewItem').val() + " success")
+                    },
+                    error: function(status)
+                        {
+                            console.log(status)
+                        }
+                })
+            }
+    </script>
+{% endblock %}

@@ -1,0 +1,83 @@
+
+
+<div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bxl-django icon'></i>
+        <div class="logo_name">Blog Project</div>
+        <i class='bx bx-menu' id="btn" ></i>
+    </div>
+    <ul class="nav-list">
+      <li>
+          <i class='bx bx-search' ></i>
+         <input type="text" placeholder="Search...">
+         <span class="tooltip">Search</span>
+      </li>
+      <li>
+        <a href="{% url 'home'%}">
+          <i class='bx bx-grid-alt'></i>
+          <span class="links_name">List Items</span>
+        </a>
+        <span class="tooltip">List Items</span>
+      </li>
+      <li>
+        <a href="{% url 'create_item'%}">
+            <i class='bx bx-add-to-queue'></i>
+            <span class="links_name">Create Items</span>
+        </a>
+        <span class="tooltip">Create Item</span>
+      </li>
+      <li>
+        <a><i class='bx bx-filter-alt'></i>
+            <span class='links_name'>Filter select</span>
+        </a>
+            <select class='filter-selects' id='category_filter' onchange='filter()'>
+                <option value="all">all</option>
+                {% for c in category %}
+                            <option value='{{c.id}}'>{{c.name}}</option>
+                {% endfor %}
+            </select>
+       </li>
+    </ul>
+  </div>
+ 
+  <script>
+  let sidebar = document.querySelector(".sidebar");
+  let closeBtn = document.querySelector("#btn");
+  let searchBtn = document.querySelector(".bx-search");
+  closeBtn.addEventListener("click", ()=>{
+    sidebar.classList.toggle("open");
+    menuBtnChange();//calling the function(optional)
+  });
+
+  searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
+    sidebar.classList.toggle("open");
+    menuBtnChange(); //calling the function(optional)
+  });
+
+  // following are the code to change sidebar button(optional)
+  function menuBtnChange() {
+   if(sidebar.classList.contains("open")){
+     closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
+   }else {
+     closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
+   }
+  }
+  function filter()
+    {
+      $.ajax({
+        url: '{% url "filters" %}',
+        method: "GET",
+        data:
+        {
+          'filter':$("#category_filter").val()
+        },
+        success: function(data){
+          $("#data_table").html('')
+          $("#data_table").html(data)
+          console.log(data)
+        }
+      })
+      console.log(`{{ blog_list }}`)
+    }
+
+  </script>
